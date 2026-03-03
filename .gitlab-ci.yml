@@ -1,0 +1,91 @@
+stages:
+  - lint
+  - test
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+frontend_lint:
+  stage: lint
+  image: node:20
+  rules:
+    - exists:
+        - frontend/package.json
+  cache:
+    key: "frontend-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - frontend/node_modules/
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    - npm run lint
+  allow_failure: false
+
+backend_checkstyle:
+  stage: lint
+  image: eclipse-temurin:17-jdk
+  rules:
+    - exists:
+        - backend/gradlew
+        - backend/build.gradle
+  cache:
+    key: "backend-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - backend/.gradle/
+  before_script:
+    - cd backend
+    - chmod +x ./gradlew
+  script:
+    - ./gradlew checkstyleMain
+  allow_failure: false
+
+# Below are the test jobs 
+
+frontend_tests:
+  stage: test
+  image: node:20
+  rules:
+    - exists:
+        - frontend/package.json
+  cache:
+    key: "frontend-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - frontend/node_modules/
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    # So this will print Jest coverage to terminal
+    - npm run test:ci
+  allow_failure: false
+
+backend_tests_coverage:
+  stage: test
+  image: eclipse-temurin:17-jdk
+  rules:
+    - exists:
+        - backend/gradlew
+        - backend/build.gradle
+  cache:
+    key: "backend-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - backend/.gradle/
+  before_script:
+    - cd backend
+    - chmod +x ./gradlew
+  script:
+    # So below it will run JUnit and generate JaCoCo reports
+    - ./gradlew test jacocoTestReport
+    - echo "---- JaCoCo Coverage Summary ----"
+    - |
+      awk -F, '
+        NR>1 { instr+=$4; cov+=$5 }
+        END {
+          if (instr==0) { print "Coverage: 0% (no instructions found)"; exit 0 }
+          printf "Coverage: %.2f%% (covered %d / %d instructions)\n", (cov/instr)*100, cov, instr
+        }
+      ' build/reports/jacoco/test/jacocoTestReport.csv
+  allow_failure: false
