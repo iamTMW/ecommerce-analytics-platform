@@ -1,26 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div className="wrap">
+      <div className="card">
+        <span className="pill">Placeholder MVP</span>
+        <span className="pill">Docker Compose</span>
+        <span className="pill">Spring Boot + Gradle</span>
+        <span className="pill">TypeScript</span>
+
+        <h1>SPRINT 4 PLACEHOLDER APP</h1>
+
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          <strong>Pitch:</strong> Our web app is designed to give product analysts
+          a clear, immediate view of what is driving their business. With
+          interactive dashboards featuring customer revenue rankings, monthly
+          revenue trends, and product performance charts, our app makes it easy
+          to identify top customers, detect seasonal patterns, and track
+          best-selling products over time.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+        <div className="grid">
+          <div>
+            <strong>What’s coming next:</strong>
+            <p>Next week: integrate API + add the Python container.</p>
+          </div>
+        </div>
+
+        <div className="cta">
+          <a className="btn" href="/api/health">
+            Backend health check
+          </a>
+
+          <a
+            className="btn"
+            href="https://gitlab.socs.uoguelph.ca/cis3760w26/indigo/ecommerce-analysis"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Project link
+          </a>
+        </div>
+
+        <p className="tip">
+          Tip: if the button above shows <code>ok</code>, your backend container
+          is up.
+        </p>
+      </div>
     </div>
   );
-}
+};
 
 export default App;

@@ -1,13 +1,12 @@
-package com.indigo.backend;
+package com.example.cis4900.spring.template;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendApplication {
+public class EcommerceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(EcommerceApplication.class, args);
 	}
-
 }
