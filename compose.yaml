@@ -43,6 +43,11 @@ services:  # Defines the services that make up the application
       - "3000:3000"  # Exposes port 3000 on the host and maps it to port 3000 in the container
     environment:  # Environment variable for the React service
       - BACKEND_PROXY=http://backend:8080  # The URL to the backend Spring service
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
     networks:  # Network the React service is connected to
       - backend-frontend  # Network for communicating with the Spring service
 
