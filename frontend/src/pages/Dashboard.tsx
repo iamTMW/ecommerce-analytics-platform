@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TestHomepage from './TestHomepage';
+import ProductsPage from './ProductsPage';
+
 
 type PageKey = 'home' | 'products' | 'revenue' | 'customers';
 
@@ -29,6 +31,7 @@ export default function Dashboard() {
   // add real pages or more here for each page key
   const pageComponents: Partial<Record<PageKey, React.FC>> = {
     home: TestHomepage,
+    products: ProductsPage,
   };
 
   const currentPage = pageInfo[activePage];
