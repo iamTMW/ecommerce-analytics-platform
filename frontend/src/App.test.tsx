@@ -3,12 +3,14 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders placeholder app heading', () => {
+test('renders dashboard home page', () => {
   render(<App />);
-  expect(screen.getByText(/SPRINT 4 PLACEHOLDER APP/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/Welcome to your ecommerce analytics dashboard/i),
+  ).toBeInTheDocument();
 });
 
-test('renders backend health check link', () => {
+test('renders dashboard navigation', () => {
   render(<App />);
-  expect(screen.getByText(/Backend health check/i)).toBeInTheDocument();
+  expect(screen.getByText(/E-Commerce Analysis/i)).toBeInTheDocument();
 });
