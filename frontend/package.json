@@ -1,35 +1,49 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.126",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "react",
+  "version": "1.0.0",
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
+    "start": "react-scripts start",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --coverage --watchAll=false",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "jest": {
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "collectCoverageFrom": [
+      "src/services/**/*.{ts,tsx}",
+      "src/types/**/*.ts",
+      "!src/**/*.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 25,
+        "functions": 25,
+        "lines": 30,
+        "statements": 30
+      }
+    }
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^14.14.41",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5",
+    "eslint": "^8.57.1",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "browserslist": {
     "production": [
@@ -42,8 +56,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint": "^8.57.1"
   }
 }

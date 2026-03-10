@@ -1,9 +1,14 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders placeholder app heading', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/SPRINT 4 PLACEHOLDER APP/i)).toBeInTheDocument();
+});
+
+test('renders backend health check link', () => {
+  render(<App />);
+  expect(screen.getByText(/Backend health check/i)).toBeInTheDocument();
 });
