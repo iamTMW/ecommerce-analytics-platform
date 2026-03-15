@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TestHomepage from './TestHomepage';
 import ProductsPage from './ProductsPage';
-
+import RevenuePage from './RevenuePage';
 
 type PageKey = 'home' | 'products' | 'revenue' | 'customers';
 
@@ -32,6 +32,7 @@ export default function Dashboard() {
   const pageComponents: Partial<Record<PageKey, React.FC>> = {
     home: TestHomepage,
     products: ProductsPage,
+    revenue: RevenuePage,
   };
 
   const currentPage = pageInfo[activePage];
