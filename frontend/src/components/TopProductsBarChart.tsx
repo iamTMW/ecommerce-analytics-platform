@@ -27,7 +27,7 @@ export default function TopProductsBarChart({
     return (
       <div className="bg-white p-6 rounded border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
-        <p className="text-gray-500">No product data available.</p>
+        <p className="text-gray-500">No matching products found.</p>
       </div>
     );
   }
@@ -45,6 +45,7 @@ export default function TopProductsBarChart({
       <div className="overflow-x-auto">
         <div className="min-w-[900px]">
           <div className="relative h-80 border-l border-b border-gray-300 px-4 pt-4">
+
             <div className="absolute inset-0 flex flex-col justify-between px-4 py-4 pointer-events-none">
               <div className="border-t border-gray-200" />
               <div className="border-t border-gray-200" />
@@ -84,6 +85,7 @@ export default function TopProductsBarChart({
                 );
               })}
             </div>
+
           </div>
 
           <div className="mt-6 overflow-hidden rounded border border-gray-200 bg-white">
@@ -98,6 +100,7 @@ export default function TopProductsBarChart({
                   </th>
                 </tr>
               </thead>
+
               <tbody>
                 {topProducts.map((product) => (
                   <tr
@@ -107,12 +110,14 @@ export default function TopProductsBarChart({
                     <td className="px-4 py-3 font-semibold text-gray-800">
                       {product.stockCode}
                     </td>
+
                     <td className="px-4 py-3 text-gray-700">
                       {product.description}
                     </td>
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
 
