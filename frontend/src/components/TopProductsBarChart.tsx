@@ -61,7 +61,8 @@ export default function TopProductsBarChart({
                 return (
                   <div
                     key={`${product.stockCode}-${product.description}`}
-                    className="flex w-20 flex-col items-center justify-end"
+                    className="flex w-20 flex-col items-center justify-end cursor-pointer"
+                    title={`${product.description} (${product.stockCode}): £${product.revenue.toFixed(2)}`}
                   >
                     <p className="mb-2 text-xs font-medium text-gray-700">
                       £{product.revenue.toFixed(0)}
@@ -87,33 +88,34 @@ export default function TopProductsBarChart({
 
           <div className="mt-6 overflow-hidden rounded border border-gray-200 bg-white">
             <table className="w-full table-auto border-collapse">
-                <thead className="bg-gray-50">
+              <thead className="bg-gray-50">
                 <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
                     Stock Code
-                    </th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
                     Product
-                    </th>
+                  </th>
                 </tr>
-                </thead>
-                <tbody>
+              </thead>
+              <tbody>
                 {topProducts.map((product) => (
-                    <tr
+                  <tr
                     key={`label-${product.stockCode}-${product.description}`}
                     className="border-b border-gray-200"
-                    >
+                  >
                     <td className="px-4 py-3 font-semibold text-gray-800">
-                        {product.stockCode}
+                      {product.stockCode}
                     </td>
                     <td className="px-4 py-3 text-gray-700">
-                        {product.description}
+                      {product.description}
                     </td>
-                    </tr>
+                  </tr>
                 ))}
-                </tbody>
+              </tbody>
             </table>
-            </div>
+          </div>
+
         </div>
       </div>
     </div>
