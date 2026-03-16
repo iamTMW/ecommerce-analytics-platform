@@ -4,6 +4,7 @@ import { ProductRevenue } from '../types/ProductRevenue';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductRevenue[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -35,6 +36,10 @@ export default function ProductsPage() {
     fetchTopProducts();
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="p-6">
@@ -53,7 +58,17 @@ export default function ProductsPage() {
 
   return (
     <div className="p-6">
-      <TopProductsBarChart products={products} />
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search product by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full max-w-md rounded border border-gray-300 bg-white p-2 text-black placeholder-gray-500"
+        />
+      </div>
+
+      <TopProductsBarChart products={filteredProducts} />
     </div>
   );
 }
