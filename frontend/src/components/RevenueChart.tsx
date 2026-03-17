@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,7 +37,7 @@ export default function RevenueChart({ rows }: RevenueChartProps) {
   };
 
   const data = {
-    labels: labels,
+    labels,
     datasets: [
       {
         label: 'Monthly Revenue',
