@@ -17,14 +17,15 @@ public class RevenueRepository {
     }
 
     public List<MonthlyRevenue> findMonthlyRevenue() {
-
         String sql = """
-            SELECT DATE_FORMAT(invoice_date, '%b') AS month,
-                   SUM(quantity * unit_price) AS revenue
+            SELECT DATE_FORMAT(invoice_date, '%Y-%m') AS month,
+                SUM(quantity * unit_price) AS revenue
             FROM retail_transactions
             WHERE invoice_no NOT LIKE 'C%'
-            GROUP BY MONTH(invoice_date), DATE_FORMAT(invoice_date, '%b')
-            ORDER BY MONTH(invoice_date)
+            AND quantity > 0
+            AND unit_price > 0
+            GROUP BY YEAR(invoice_date), MONTH(invoice_date)
+            ORDER BY YEAR(invoice_date) ASC, MONTH(invoice_date) ASC
         """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new MonthlyRevenue(
@@ -33,3 +34,4 @@ public class RevenueRepository {
         ));
     }
 }
+
