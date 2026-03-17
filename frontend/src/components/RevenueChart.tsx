@@ -11,6 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { MonthlyRevenue } from '../types/MonthlyRevenue';
 
 ChartJS.register(
   CategoryScale,
@@ -22,8 +23,13 @@ ChartJS.register(
   Legend,
 );
 
-export default function RevenueChart() {
-  const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+type RevenueChartProps = {
+  rows: MonthlyRevenue[];
+};
+
+export default function RevenueChart({ rows }: RevenueChartProps) {
+  const labels = rows.map((r) => r.month);
+  const values = rows.map((r) => r.revenue);
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -34,8 +40,8 @@ export default function RevenueChart() {
     labels: labels,
     datasets: [
       {
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Monthly Revenue',
+        data: values,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
