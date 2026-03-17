@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,8 +22,31 @@ ChartJS.register(
   Legend,
 );
 
+type MonthlyRevenue = {
+  month: string;
+  revenue: number;
+};
+
 export default function RevenueChart() {
-  const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  const [labels, setLabels] = useState<string[]>([]);
+  const [revenues, setRevenues] = useState<number[]>([]);
+
+  useEffect(() => {
+    fetch('/api/revenue/monthly')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch monthly revenue');
+        }
+        return res.json();
+      })
+      .then((data: MonthlyRevenue[]) => {
+        setLabels(data.map((item) => item.month));
+        setRevenues(data.map((item) => item.revenue));
+      })
+      .catch((error) => {
+        console.error('Error fetching revenue data:', error);
+      });
+  }, []);
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -31,11 +54,11 @@ export default function RevenueChart() {
   };
 
   const data = {
-    labels: labels,
+    labels,
     datasets: [
       {
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Monthly Revenue ($)',
+        data: revenues,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
