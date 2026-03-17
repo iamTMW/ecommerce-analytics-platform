@@ -17,7 +17,8 @@
     "collectCoverageFrom": [
       "src/services/**/*.{ts,tsx}",
       "src/types/**/*.ts",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "src/components/RevenueChart.tsx"
     ],
     "coverageThreshold": {
       "global": {
