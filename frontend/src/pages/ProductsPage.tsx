@@ -36,8 +36,11 @@ export default function ProductsPage() {
     fetchTopProducts();
   }, []);
 
+  const normalizedSearch = searchTerm.toLowerCase();
+
   const filteredProducts = products.filter((product) =>
-    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (product.description ?? '').toLowerCase().includes(normalizedSearch) ||
+    (product.stockCode ?? '').toLowerCase().includes(normalizedSearch)
   );
 
   if (loading) {

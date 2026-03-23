@@ -27,7 +27,7 @@ export default function TopProductsBarChart({
     return (
       <div className="bg-white p-6 rounded border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
-        <p className="text-gray-500">No matching products found.</p>
+        <p className="text-gray-500">No matching results found.</p>
       </div>
     );
   }
@@ -45,7 +45,6 @@ export default function TopProductsBarChart({
       <div className="overflow-x-auto">
         <div className="min-w-[900px]">
           <div className="relative h-80 border-l border-b border-gray-300 px-4 pt-4">
-
             <div className="absolute inset-0 flex flex-col justify-between px-4 py-4 pointer-events-none">
               <div className="border-t border-gray-200" />
               <div className="border-t border-gray-200" />
@@ -58,12 +57,16 @@ export default function TopProductsBarChart({
               {topProducts.map((product, index) => {
                 const barHeight = Math.max((product.revenue / maxRevenue) * 220, 12);
                 const barColor = BAR_COLORS[index % BAR_COLORS.length];
+                const primaryLabel = String(
+                  product.customerId || product.stockCode || 'Unknown'
+                ).replace('.0', '');
+                const secondaryLabel = product.description || `Customer #${primaryLabel}`;
 
                 return (
                   <div
-                    key={`${product.stockCode}-${product.description}`}
+                    key={`${primaryLabel}-${index}`}
                     className="flex w-20 flex-col items-center justify-end cursor-pointer"
-                    title={`${product.description} (${product.stockCode}): £${product.revenue.toFixed(2)}`}
+                    title={`${secondaryLabel}: £${product.revenue.toFixed(2)}`}
                   >
                     <p className="mb-2 text-xs font-medium text-gray-700">
                       £{product.revenue.toFixed(0)}
@@ -75,17 +78,16 @@ export default function TopProductsBarChart({
                         height: `${barHeight}px`,
                         backgroundColor: barColor,
                       }}
-                      aria-label={`${product.description} revenue bar`}
+                      aria-label={`${secondaryLabel} revenue bar`}
                     />
 
                     <p className="mt-3 text-xs font-semibold text-gray-700 text-center">
-                      {product.stockCode}
+                      {primaryLabel}
                     </p>
                   </div>
                 );
               })}
             </div>
-
           </div>
 
           <div className="mt-6 overflow-hidden rounded border border-gray-200 bg-white">
@@ -93,34 +95,39 @@ export default function TopProductsBarChart({
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
-                    Stock Code
+                    ID / Code
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
-                    Product
+                    Name / Description
                   </th>
                 </tr>
               </thead>
 
               <tbody>
-                {topProducts.map((product) => (
-                  <tr
-                    key={`label-${product.stockCode}-${product.description}`}
-                    className="border-b border-gray-200"
-                  >
-                    <td className="px-4 py-3 font-semibold text-gray-800">
-                      {product.stockCode}
-                    </td>
+                {topProducts.map((product, index) => {
+                  const primaryLabel = String(
+                    product.customerId || product.stockCode || 'Unknown'
+                  ).replace('.0', '');
+                  const secondaryLabel = product.description || `Customer #${primaryLabel}`;
 
-                    <td className="px-4 py-3 text-gray-700">
-                      {product.description}
-                    </td>
-                  </tr>
-                ))}
+                  return (
+                    <tr
+                      key={`label-${primaryLabel}-${index}`}
+                      className="border-b border-gray-200"
+                    >
+                      <td className="px-4 py-3 font-semibold text-gray-800">
+                        {primaryLabel}
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-700">
+                        {secondaryLabel}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
-
             </table>
           </div>
-
         </div>
       </div>
     </div>

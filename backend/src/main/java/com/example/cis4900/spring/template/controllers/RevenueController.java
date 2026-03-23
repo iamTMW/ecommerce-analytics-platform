@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cis4900.spring.template.models.MonthlyRevenue;
-import com.example.cis4900.spring.template.repositories.RevenueRepository;
+import com.example.cis4900.spring.template.repositories.RevenueRepository; 
+import com.example.cis4900.spring.template.models.CustomerRevenue;
 
 @RestController
 public class RevenueController {
@@ -20,5 +21,9 @@ public class RevenueController {
     @GetMapping("/api/revenue/monthly")
     public List<MonthlyRevenue> getMonthlyRevenue() {
         return revenueRepository.findMonthlyRevenue();
+    } 
+    @GetMapping("/api/customers/top")
+    public List<CustomerRevenue> getTopCustomers() {
+        return revenueRepository.findTopCustomers();
     }
 }
