@@ -12,5 +12,5 @@ test('renders dashboard home page', () => {
 
 test('renders dashboard navigation', () => {
   render(<App />);
-  expect(screen.getByText(/E-Commerce Analysis/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/E-Commerce Analysis/i).length).toBeGreaterThan(0);
 });
