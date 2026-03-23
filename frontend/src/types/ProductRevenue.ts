@@ -1,5 +1,6 @@
 export type ProductRevenue = {
-    stockCode: string;
-    description: string;
-    revenue: number;
-  };
+  stockCode?: string;
+  description?: string;
+  customerId?: string;
+  revenue: number;
+};
