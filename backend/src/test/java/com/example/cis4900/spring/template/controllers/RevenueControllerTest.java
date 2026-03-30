@@ -32,7 +32,7 @@ class RevenueControllerTest {
                 new MonthlyRevenue("2024-01", new BigDecimal("123.45")),
                 new MonthlyRevenue("2024-02", new BigDecimal("234.56")));
 
-        when(revenueRepository.findMonthlyRevenue()).thenReturn(revenues);
+        when(revenueRepository.findMonthlyRevenue(null, null)).thenReturn(revenues);
 
         mockMvc.perform(get("/api/revenue/monthly"))
                 .andExpect(status().isOk())

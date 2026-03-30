@@ -33,7 +33,7 @@ class RevenueRepositoryTest {
         when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
                 .thenReturn(List.of());
 
-        repository.findMonthlyRevenue();
+        repository.findMonthlyRevenue(null, null);
 
         verify(jdbcTemplate).query(sqlCaptor.capture(), mapperCaptor.capture());
         String sql = sqlCaptor.getValue();
@@ -65,7 +65,7 @@ class RevenueRepositoryTest {
         when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
                 .thenReturn(List.of());
 
-        var result = repository.findMonthlyRevenue();
+        var result = repository.findMonthlyRevenue(null, null);
 
         assertThat(result).isEmpty();
     }
@@ -81,7 +81,7 @@ class RevenueRepositoryTest {
         when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
                 .thenReturn(List.of());
 
-        repository.findMonthlyRevenue();
+        repository.findMonthlyRevenue(null, null);
 
         verify(jdbcTemplate).query(anyString(), mapperCaptor.capture());
         RowMapper<MonthlyRevenue> mapper = mapperCaptor.getValue();
