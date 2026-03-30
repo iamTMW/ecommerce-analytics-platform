@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.example.cis4900.spring.template.models.MonthlyRevenue;
+import com.example.cis4900.spring.template.models.WeeklyRevenue;
 
 class RevenueRepositoryTest {
 
@@ -101,5 +102,40 @@ class RevenueRepositoryTest {
         assertThat(first.getRevenue()).isEqualByComparingTo("10.00");
         assertThat(second.getMonth()).isEqualTo("2024-02");
         assertThat(second.getRevenue()).isEqualByComparingTo("20.00");
+    }
+
+    @Test
+    void findWeeklyRevenue_usesExpectedSql_andMapsRowToWeeklyRevenue() throws SQLException {
+        JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        RevenueRepository repository = new RevenueRepository(jdbcTemplate);
+
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<RowMapper<WeeklyRevenue>> mapperCaptor =
+                ArgumentCaptor.forClass(RowMapper.class);
+
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
+                .thenReturn(List.of());
+
+        repository.findWeeklyRevenue();
+
+        verify(jdbcTemplate).query(sqlCaptor.capture(), mapperCaptor.capture());
+        String sql = sqlCaptor.getValue();
+        assertThat(sql).contains("YEARWEEK(invoice_date, 3)");
+        assertThat(sql).contains("AS week");
+        assertThat(sql).contains("SUM(quantity * unit_price) AS revenue");
+        assertThat(sql).contains("FROM retail_transactions");
+        assertThat(sql).contains("WHERE invoice_no NOT LIKE 'C%'");
+        assertThat(sql).contains("GROUP BY YEARWEEK(invoice_date, 3)");
+        assertThat(sql).contains("ORDER BY YEARWEEK(invoice_date, 3) ASC");
+
+        RowMapper<WeeklyRevenue> mapper = mapperCaptor.getValue();
+        ResultSet rs = mock(ResultSet.class);
+        when(rs.getString("week")).thenReturn("2024-W01");
+        when(rs.getBigDecimal("revenue")).thenReturn(new BigDecimal("99.99"));
+
+        WeeklyRevenue mapped = mapper.mapRow(rs, 0);
+
+        assertThat(mapped.getWeek()).isEqualTo("2024-W01");
+        assertThat(mapped.getRevenue()).isEqualByComparingTo("99.99");
     }
 }

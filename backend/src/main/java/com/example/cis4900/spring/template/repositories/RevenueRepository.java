@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.cis4900.spring.template.models.MonthlyRevenue; 
+import com.example.cis4900.spring.template.models.MonthlyRevenue;
+import com.example.cis4900.spring.template.models.WeeklyRevenue;
 import com.example.cis4900.spring.template.models.CustomerRevenue;
 
 @Repository
@@ -33,7 +34,29 @@ public class RevenueRepository {
                 rs.getString("month"),
                 rs.getBigDecimal("revenue")
         ));
-    } 
+    }
+
+    public List<WeeklyRevenue> findWeeklyRevenue() {
+        String sql = """
+            SELECT CONCAT(
+                    FLOOR(YEARWEEK(invoice_date, 3) / 100),
+                    '-W',
+                    LPAD(MOD(YEARWEEK(invoice_date, 3), 100), 2, '0')
+                ) AS week,
+                SUM(quantity * unit_price) AS revenue
+            FROM retail_transactions
+            WHERE invoice_no NOT LIKE 'C%'
+            AND quantity > 0
+            AND unit_price > 0
+            GROUP BY YEARWEEK(invoice_date, 3)
+            ORDER BY YEARWEEK(invoice_date, 3) ASC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new WeeklyRevenue(
+                rs.getString("week"),
+                rs.getBigDecimal("revenue")
+        ));
+    }
 
     public List<CustomerRevenue> findTopCustomers() {
     String sql = """
