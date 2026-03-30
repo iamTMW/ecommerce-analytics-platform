@@ -19,9 +19,11 @@ public class RevenueController {
     }
 
     @GetMapping("/api/revenue/monthly")
-    public List<MonthlyRevenue> getMonthlyRevenue() {
-        return revenueRepository.findMonthlyRevenue();
-    } 
+    public List<MonthlyRevenue> getMonthlyRevenue(
+            @org.springframework.web.bind.annotation.RequestParam(value = "startDate", required = false) String startDate,
+            @org.springframework.web.bind.annotation.RequestParam(value = "endDate", required = false) String endDate) {
+        return revenueRepository.findMonthlyRevenue(startDate, endDate);
+    }
     @GetMapping("/api/customers/top")
     public List<CustomerRevenue> getTopCustomers() {
         return revenueRepository.findTopCustomers();

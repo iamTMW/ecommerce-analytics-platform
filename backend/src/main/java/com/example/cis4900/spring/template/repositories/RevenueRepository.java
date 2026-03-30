@@ -17,23 +17,34 @@ public class RevenueRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<MonthlyRevenue> findMonthlyRevenue() {
-        String sql = """
+    public List<MonthlyRevenue> findMonthlyRevenue(String startDate, String endDate) {
+        StringBuilder sql = new StringBuilder("""
             SELECT DATE_FORMAT(invoice_date, '%Y-%m') AS month,
                 SUM(quantity * unit_price) AS revenue
             FROM retail_transactions
             WHERE invoice_no NOT LIKE 'C%'
             AND quantity > 0
             AND unit_price > 0
-            GROUP BY YEAR(invoice_date), MONTH(invoice_date)
-            ORDER BY YEAR(invoice_date) ASC, MONTH(invoice_date) ASC
-        """;
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new MonthlyRevenue(
+        """);
+        java.util.List<Object> params = new java.util.ArrayList<>();
+        if (startDate != null && !startDate.isEmpty()) {
+            sql.append(" AND invoice_date >= ?");
+            params.add(startDate);
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            sql.append(" AND invoice_date <= ?");
+            params.add(endDate);
+        }
+        sql.append(" GROUP BY YEAR(invoice_date), MONTH(invoice_date) ORDER BY YEAR(invoice_date) ASC, MONTH(invoice_date) ASC");
+        return jdbcTemplate.query(
+            sql.toString(),
+            (rs, rowNum) -> new MonthlyRevenue(
                 rs.getString("month"),
                 rs.getBigDecimal("revenue")
-        ));
-    } 
+            ),
+            params.toArray()
+        );
+    }
 
     public List<CustomerRevenue> findTopCustomers() {
     String sql = """
