@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import RevenueChart from '../components/RevenueChart';
 import { MonthlyRevenue } from '../types/MonthlyRevenue';
+import { RevenueSeriesRow } from '../types/RevenueSeriesRow';
 
 export default function TestHomepage() {
   const startDate = '2011-01-01';
   const endDate = '2011-12-31';
-  const [rows, setRows] = useState<MonthlyRevenue[]>([]);
+  const [rows, setRows] = useState<RevenueSeriesRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +28,12 @@ export default function TestHomepage() {
         });
         if (!res.ok) throw new Error('Failed to get monthly revenue');
         const payload = (await res.json()) as MonthlyRevenue[];
-        setRows(payload);
+        setRows(
+          payload.map((r) => ({
+            period: r.month,
+            revenue: Number(r.revenue),
+          })),
+        );
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           setError('Could not load monthly revenue');
@@ -66,7 +72,7 @@ export default function TestHomepage() {
       ) : error ? (
         <div className="text-red-600">{error}</div>
       ) : (
-        <RevenueChart rows={rows} />
+        <RevenueChart rows={rows} datasetLabel="Monthly revenue" />
       )}
     </div>
   );

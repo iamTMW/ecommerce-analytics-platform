@@ -4,6 +4,7 @@ import { ProductRevenue } from '../types/ProductRevenue';
 type TopProductsBarChartProps = {
   products: ProductRevenue[];
   title?: string;
+  max?: number;
 };
 
 const BAR_COLORS = [
@@ -22,6 +23,7 @@ const BAR_COLORS = [
 export default function TopProductsBarChart({
   products,
   title = 'Top 10 Products by Revenue',
+  max = 10,
 }: TopProductsBarChartProps) {
   if (!products || products.length === 0) {
     return (
@@ -34,7 +36,7 @@ export default function TopProductsBarChart({
 
   const topProducts = [...products]
     .sort((a, b) => b.revenue - a.revenue)
-    .slice(0, 10);
+    .slice(0, max);
 
   const maxRevenue = Math.max(...topProducts.map((product) => product.revenue), 1);
 
