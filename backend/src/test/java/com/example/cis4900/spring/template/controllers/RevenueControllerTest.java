@@ -33,7 +33,7 @@ class RevenueControllerTest {
                 new MonthlyRevenue("2024-01", new BigDecimal("123.45")),
                 new MonthlyRevenue("2024-02", new BigDecimal("234.56")));
 
-        when(revenueRepository.findMonthlyRevenue()).thenReturn(revenues);
+        when(revenueRepository.findMonthlyRevenue(null, null)).thenReturn(revenues);
 
         mockMvc.perform(get("/api/revenue/monthly"))
                 .andExpect(status().isOk())
@@ -50,7 +50,7 @@ class RevenueControllerTest {
                 new WeeklyRevenue("2024-W01", new BigDecimal("100.00")),
                 new WeeklyRevenue("2024-W02", new BigDecimal("250.00")));
 
-        when(revenueRepository.findWeeklyRevenue()).thenReturn(revenues);
+        when(revenueRepository.findWeeklyRevenue(null, null)).thenReturn(revenues);
 
         mockMvc.perform(get("/api/revenue/weekly"))
                 .andExpect(status().isOk())
