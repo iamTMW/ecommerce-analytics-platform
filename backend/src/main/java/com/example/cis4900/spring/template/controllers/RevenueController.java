@@ -35,7 +35,8 @@ public class RevenueController {
     }
 
     @GetMapping("/api/customers/top")
-    public List<CustomerRevenue> getTopCustomers() {
-        return revenueRepository.findTopCustomers();
+    public List<CustomerRevenue> getTopCustomers(
+            @RequestParam(value = "max", required = false) Integer max) {
+        return revenueRepository.findTopCustomers(max);
     }
 }

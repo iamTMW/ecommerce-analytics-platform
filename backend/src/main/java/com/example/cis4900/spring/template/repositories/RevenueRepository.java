@@ -78,7 +78,8 @@ public class RevenueRepository {
                 params.toArray());
     }
 
-    public List<CustomerRevenue> findTopCustomers() {
+    public List<CustomerRevenue> findTopCustomers(Integer max) {
+        int limit = max != null && max > 0 ? max : 10;
         String sql = """
             SELECT customer_id,
                    SUM(quantity * unit_price) AS revenue
@@ -89,14 +90,13 @@ public class RevenueRepository {
               AND customer_id IS NOT NULL
             GROUP BY customer_id
             ORDER BY revenue DESC
-            LIMIT 10
+            LIMIT ?
         """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new CustomerRevenue(
                         rs.getString("customer_id"),
                         rs.getBigDecimal("revenue")
-                )
-        );
+                ), limit);
     }
 }
