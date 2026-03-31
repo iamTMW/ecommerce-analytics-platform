@@ -27,15 +27,14 @@ class RevenueRepositoryTest {
         RevenueRepository repository = new RevenueRepository(jdbcTemplate);
 
         ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<RowMapper<MonthlyRevenue>> mapperCaptor =
-                ArgumentCaptor.forClass(RowMapper.class);
+        ArgumentCaptor<RowMapper<MonthlyRevenue>> mapperCaptor = ArgumentCaptor.forClass(RowMapper.class);
 
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any(Object[].class)))
                 .thenReturn(List.of());
 
-        repository.findMonthlyRevenue();
+        repository.findMonthlyRevenue(null, null);
 
-        verify(jdbcTemplate).query(sqlCaptor.capture(), mapperCaptor.capture());
+        verify(jdbcTemplate).query(sqlCaptor.capture(), mapperCaptor.capture(), any(Object[].class));
         String sql = sqlCaptor.getValue();
         assertThat(sql).contains("SELECT DATE_FORMAT(invoice_date, '%Y-%m') AS month");
         assertThat(sql).contains("SUM(quantity * unit_price) AS revenue");
@@ -62,10 +61,10 @@ class RevenueRepositoryTest {
         JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         RevenueRepository repository = new RevenueRepository(jdbcTemplate);
 
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any(Object[].class)))
                 .thenReturn(List.of());
 
-        var result = repository.findMonthlyRevenue();
+        var result = repository.findMonthlyRevenue(null, null);
 
         assertThat(result).isEmpty();
     }
@@ -75,15 +74,14 @@ class RevenueRepositoryTest {
         JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         RevenueRepository repository = new RevenueRepository(jdbcTemplate);
 
-        ArgumentCaptor<RowMapper<MonthlyRevenue>> mapperCaptor =
-                ArgumentCaptor.forClass(RowMapper.class);
+        ArgumentCaptor<RowMapper<MonthlyRevenue>> mapperCaptor = ArgumentCaptor.forClass(RowMapper.class);
 
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
+        when(jdbcTemplate.query(anyString(), any(RowMapper.class), any(Object[].class)))
                 .thenReturn(List.of());
 
-        repository.findMonthlyRevenue();
+        repository.findMonthlyRevenue(null, null);
 
-        verify(jdbcTemplate).query(anyString(), mapperCaptor.capture());
+        verify(jdbcTemplate).query(anyString(), mapperCaptor.capture(), any(Object[].class));
         RowMapper<MonthlyRevenue> mapper = mapperCaptor.getValue();
 
         ResultSet firstRow = mock(ResultSet.class);
