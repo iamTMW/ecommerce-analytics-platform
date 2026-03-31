@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { MonthlyRevenue } from '../types/MonthlyRevenue';
+import { RevenueSeriesRow } from '../types/RevenueSeriesRow';
 
 ChartJS.register(
   CategoryScale,
@@ -24,11 +24,12 @@ ChartJS.register(
 );
 
 type RevenueChartProps = {
-  rows: MonthlyRevenue[];
+  rows: RevenueSeriesRow[];
+  datasetLabel: string;
 };
 
-export default function RevenueChart({ rows }: RevenueChartProps) {
-  const labels = rows.map((r) => r.month);
+export default function RevenueChart({ rows, datasetLabel }: RevenueChartProps) {
+  const labels = rows.map((r) => r.period);
   const values = rows.map((r) => r.revenue);
 
   const options: ChartOptions<'line'> = {
@@ -40,7 +41,7 @@ export default function RevenueChart({ rows }: RevenueChartProps) {
     labels,
     datasets: [
       {
-        label: 'Monthly Revenue',
+        label: datasetLabel,
         data: values,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',

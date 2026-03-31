@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.cis4900.spring.template.models.MonthlyRevenue;
+import com.example.cis4900.spring.template.models.WeeklyRevenue;
 import com.example.cis4900.spring.template.repositories.RevenueRepository;
 
 @WebMvcTest(RevenueController.class)
@@ -41,6 +42,23 @@ class RevenueControllerTest {
                 .andExpect(jsonPath("$[0].revenue").value(123.45))
                 .andExpect(jsonPath("$[1].month").value("2024-02"))
                 .andExpect(jsonPath("$[1].revenue").value(234.56));
+    }
+
+    @Test
+    void getWeeklyRevenue_returnsWeeklyRevenueList() throws Exception {
+        List<WeeklyRevenue> revenues = List.of(
+                new WeeklyRevenue("2024-W01", new BigDecimal("100.00")),
+                new WeeklyRevenue("2024-W02", new BigDecimal("250.00")));
+
+        when(revenueRepository.findWeeklyRevenue(null, null)).thenReturn(revenues);
+
+        mockMvc.perform(get("/api/revenue/weekly"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].week").value("2024-W01"))
+                .andExpect(jsonPath("$[0].revenue").value(100.00))
+                .andExpect(jsonPath("$[1].week").value("2024-W02"))
+                .andExpect(jsonPath("$[1].revenue").value(250.00));
     }
 }
 
