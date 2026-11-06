@@ -1,87 +1,113 @@
 # E-Commerce Analytics Platform
 
-A full-stack retail analytics application for exploring sales performance, customer spending, and product trends. It combines a React dashboard with a Spring Boot REST API and a MariaDB data store.
+**Full-stack retail analytics · REST APIs · SQL reporting · automated quality checks**
 
-**Stack:** React · TypeScript · Java · Spring Boot · MariaDB · SQL · Docker Compose · GitLab CI/CD
+A collaborative analytics application that turns retail transactions into interactive views of revenue, product performance, and customer spending.
 
-> **Project status:** Collaborative software engineering project. This repository includes the team's work and original Git history. The contribution notes below distinguish individual work from the overall implementation.
+**Built with:** React · TypeScript · Spring Boot · Java · MariaDB · Docker Compose · GitLab CI/CD
 
-## What it does
+## At a glance
 
-| Area | Capabilities |
+| Analytics view | What it provides |
 | --- | --- |
-| **Revenue analytics** | View revenue trends over time, including monthly summaries and date-range filtering. |
-| **Product analytics** | Explore top-performing products by revenue and adjust the number of results shown. |
-| **Customer analytics** | Compare customer spending and adjust the number of ranked customers displayed. |
-| **Dashboard overview** | See important analytics at a glance rather than switching between reports. |
+| **Revenue** | Trends and summaries of sales performance, with date-based filtering |
+| **Products** | Product revenue analysis with configurable result limits |
+| **Customers** | Customer spending comparisons and ranked results |
+| **Dashboard** | A shared frontend for exploring the main analytics workflows |
 
-The application is designed around product-analyst workflows: retrieving data from REST endpoints, transforming results for charts, and providing clear feedback when a request cannot be completed.
-
-## Architecture
+## System architecture
 
 ```mermaid
 flowchart LR
-    A[React and TypeScript dashboard] -->|HTTP requests| B[Spring Boot REST API]
-    B --> C[Repository and SQL queries]
-    C --> D[(MariaDB retail transactions)]
-    B -->|JSON responses| A
+  UI[React + TypeScript dashboard] -->|REST / JSON| API[Spring Boot API]
+  API --> SQL[SQL aggregation and filtering]
+  SQL --> DB[(MariaDB retail transactions)]
+  API -->|Analysis results| UI
 ```
 
-The backend exposes endpoints used by the dashboard's revenue, product, and customer views. Data is aggregated and filtered in SQL before being returned to the frontend.
+- **Frontend:** React dashboard, reusable UI components, charts, and frontend tests.
+- **Backend:** Java/Spring Boot API, request handling, SQL-backed analytics, and backend tests.
+- **Database:** MariaDB transaction records initialized by the included database setup scripts.
+- **Local development:** Docker Compose connects the frontend, backend, and database services.
 
-## Engineering highlights
+## Engineering process
 
 ### Agile delivery and requirements
 
-The team organized delivery across **eight Scrum sprints**, tracking product-backlog items, user stories, tasks, acceptance criteria, sprint reviews, and retrospectives in GitLab. The project documentation also includes UML class/sequence diagrams, API contracts, technical-debt analysis, and system acceptance testing.
+The team delivered the system over **eight Scrum sprints**, using backlog items, user stories, acceptance criteria, feature branches, merge requests, and retrospectives.
 
-### CI/CD and automated quality checks
+The accompanying GitLab project documentation covers REST endpoints, UML class and sequence diagrams, code standards, technical debt, and system acceptance testing.
 
-GitLab pipelines run on pushes and merge-request events. The versioned [`.gitlab-ci.yml`](.gitlab-ci.yml) defines four jobs:
+### CI/CD
 
-| Job | Purpose |
+The committed [GitLab pipeline configuration](.gitlab-ci.yml) defines four automated checks:
+
+| Pipeline job | Check |
 | --- | --- |
-| `frontend_lint` | Runs frontend ESLint checks. |
-| `backend_checkstyle` | Runs Java Checkstyle checks with Gradle. |
-| `frontend_tests` | Runs frontend tests with coverage reporting. |
-| `backend_tests_coverage` | Runs backend tests and generates JaCoCo coverage reports. |
+| `frontend_lint` | ESLint checks for the frontend |
+| `backend_checkstyle` | Gradle/Checkstyle for Java code |
+| `frontend_tests` | Frontend tests with coverage output |
+| `backend_tests_coverage` | Backend tests and JaCoCo coverage report |
 
-These are **GitLab CI/CD** workflows; copying the source to GitHub does not automatically convert them to GitHub Actions.
+The pipeline is configured for pushes and merge requests in **GitLab**. It does **not** automatically execute as GitHub Actions after mirroring the repository.
 
-### Design and quality
+## Run locally
 
-- Documented REST endpoint behavior and frontend/backend interactions with UML diagrams.
-- Refined hard-coded API result limits by adding optional filtering parameters.
-- Documented technical debt and performed system acceptance testing.
-- Used feature branches, merge requests, and code review to integrate changes.
+**Requirements:** Docker Desktop or Docker Engine with Docker Compose.
 
-## My contribution
+1. Copy the local configuration template:
+   ```bash
+   cp .env.example .env
+   ```
+2. Edit `.env` and set a unique `DB_PASSWORD` value. **Do not commit `.env`.**
+3. Build and run the services:
+   ```bash
+   docker compose up --build
+   ```
+4. With all containers running, the frontend is configured for **http://localhost:3000** and the backend for **http://localhost:8080**.
 
-I worked extensively with the **GitLab CI/CD pipelines**, including investigating automated frontend/backend lint and test failures and validating changes during the merge process. I also participated in the Scrum delivery workflow and related technical documentation.
+Stop the services with `docker compose down`.
 
-The analytics application was **developed collaboratively**. Features and technical decisions described above represent the team's work; the Git commit history preserves individual authorship.
+> **Local-development notes:** These Compose files are not production hardening. The database is exposed to the host for development. If you previously initialized a persistent MariaDB volume using an old password, updating `.env` alone will not rotate that database account's existing password; update it in the database or create a new **disposable development** volume only if you do not need its data.
 
-## Project structure
+## Repository structure
 
 ```text
-frontend/            React UI, charts, frontend tests
-backend/             Spring Boot API, repositories, backend tests
-database/            MariaDB initialization and dataset import
-.gitlab-ci.yml       GitLab pipeline configuration
-compose.yaml         Local Docker Compose services
-compose.deploy.yaml  Deployment-oriented Compose configuration
+frontend/             React UI, dashboard views, frontend tests
+backend/              Spring Boot API, SQL-backed services, tests
+database/             MariaDB image, initialization scripts and retail data
+.gitlab-ci.yml        Automated lint and test pipeline
+compose.yaml          Local multi-container development
+compose.deploy.yaml   Alternate Compose configuration
+.env.example          Example (non-secret) local environment settings
 ```
 
-## Screenshots and technical documentation
+## Dataset and attribution
 
-Screenshots of the dashboards, selected UML diagrams, and a focused CI/CD walkthrough can be added here after they are reviewed for publication.
+This repository includes a retail dataset named `online_retail_II.csv`. The corresponding **Online Retail II** dataset is published by the **UCI Machine Learning Repository** under **Creative Commons Attribution 4.0**.
 
-## Notes for reviewers
+**Dataset citation:** Chen, D. (2012). *Online Retail II* [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D
 
-- The project was built as a **team**; it should not be interpreted as solely authored by the account owner.
-- The committed Compose configuration is a **development example**, not a production deployment specification. Do not deploy it to a public server with the example database credentials.
-- Dataset redistribution rights, sharing permissions, and repository history should be reviewed **before making the repository public**.
+- [UCI Online Retail II dataset](https://archive.ics.uci.edu/dataset/502/online+retail+ii)
+- [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/)
 
-## Acknowledgments
+If the included CSV was exported, filtered, or transformed from the source workbook, those transformations are part of this project's data preparation; the original dataset and its license remain attributable to the source creator. This attribution does not grant rights to unrelated third-party materials.
 
-Thanks to the original development team. Attribution remains available in the commit history.
+## Contributions
+
+This is a **team-built software engineering project**, with original authors and commit history retained.
+
+**My contributions** included extensive work troubleshooting **GitLab CI/CD** lint/test checks across frontend and backend components, validating changes during the merge process, and participating in Scrum delivery and supporting technical documentation.
+
+The dashboards and architecture represent the overall team's implementation—not a claim of sole authorship.
+
+## Further improvements
+
+- Add verified screenshots of each dashboard.
+- Expand API examples and setup troubleshooting.
+- Record automated test coverage and CI outcomes with evidence.
+- Improve production deployment security, including least-privilege database access.
+
+---
+
+*Project presented as a technical portfolio example. Credit to the full development team.*
