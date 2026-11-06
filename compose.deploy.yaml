@@ -13,7 +13,7 @@ services:  # Defines the services that make up the application
       - DB_ADDRESS=jdbc:mysql://database:3306  # JDBC URL for the MySQL database, 'mysql' is the service name in docker-compose
       - DB_DATABASE=template_db  # The name of the database to use
       - DB_USER=root  # The username for the database
-      - DB_PASSWORD=pwd  # The password for the database
+      - DB_PASSWORD=${DB_PASSWORD:?Set DB_PASSWORD in a local .env file}  # The password for the database
     #Networks: The service is attached to spring-mysql and spring-react networks, enabling network communication with the MySQL and React services.
     networks:  # Networks the Spring service is connected to
       - backend-database  # Network for communicating with MySQL
@@ -23,7 +23,7 @@ services:  # Defines the services that make up the application
     build: ./database  # Builds the Docker image from the Dockerfile in the './mysql' directory
     #Environment Variables: Used to configure the MySQL server, like setting the root password (MYSQL_ROOT_PASSWORD) and specifying the database to create at startup (MYSQL_DATABASE).
     environment:  # Environment variables for the MySQL service
-      - MYSQL_ROOT_PASSWORD=pwd  # The root password for MySQL
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:?Set DB_PASSWORD in a local .env file}  # The root password for MySQL
       - MYSQL_DATABASE=template_db  # The database to create when the container starts
     #Volumes: volumes: - mariadb_data:/var/lib/mysql mounts the named volume mariadb_data to /var/lib/mysql inside the container, providing persistent storage for the database.
     volumes:  # Persistent storage for the MySQL database
